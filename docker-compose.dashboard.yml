@@ -1,0 +1,15 @@
+services:
+  dashboard:
+    build: .
+    command: ["streamlit", "run", "dashboard/app.py", "--server.address=0.0.0.0", "--server.port=8501"]
+    environment:
+      BANK_DATA_PATH: /app/bank/bank-full.csv
+      API_URL: ${API_URL:-http://host.docker.internal:8000}
+      API_DOCS_URL: ${API_DOCS_URL:-http://localhost:8000/docs}
+    ports:
+      - "${DASHBOARD_HOST_PORT:-8501}:8501"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./bank:/app/bank:ro
+    restart: unless-stopped
